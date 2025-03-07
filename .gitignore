@@ -1,0 +1,16 @@
+# Rest request folder
+
+test/
+.codegpt
+
+# Dependency directories
+node_modules/
+build/
+.vscode/
+
+#Env
+.env
+.env.development
+
+# Package 
+package-lock.json
