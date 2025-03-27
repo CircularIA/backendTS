@@ -1,11 +1,13 @@
-import express from "express";
-import cors from "cors";
 import doteenv from "dotenv";
-import { connectDB } from "./database";
-import { corsConfigure } from "./config/corsConfigure";
-
 //Configuración de dotenv
 doteenv.config();
+
+import express from "express";
+import cors from "cors";
+import { connectDB } from "./database";
+import { corsConfigure } from "./config/corsConfigure";
+import router from "./routes/routes";
+
 const app = express();
 const DB = process.env.MONGO_URI || "";
 
@@ -14,6 +16,7 @@ app.use(express.json()); //Para que el servidor entienda JSON
 app.use(cors(corsConfigure)); //Para que el servidor entienda CORS
 
 //Routes
+app.use("/api/v1", router);
 
 //Connect to MongoDB
 connectDB(DB);
