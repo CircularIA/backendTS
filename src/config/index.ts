@@ -4,6 +4,8 @@ const CONFIG = {
 	JWT_KEY: process.env.JWT_KEY || "secret",
 	JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || "1d",
 	NODE_ENV: process.env.NODE_ENV || "development",
+	SECRET_KEY: process.env.SECRET_KEY || "secret",
+	SALT: process.env.SALT || 10,
 };
 
 export { CONFIG };
