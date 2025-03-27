@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { objectIdRegex } from "@src/constants/schema";
-import { USER_ROLES } from "@src/types/roles.types";
+import { USER_ROLES } from "@src/middlewares/roles";
 
 export const userEntitySchema = z.object({
 	_id: z.string().regex(objectIdRegex, { message: "Invalid ObjectId" }),
@@ -14,6 +14,7 @@ export const userEntitySchema = z.object({
 	company: z.string().regex(objectIdRegex, { message: "Invalid ObjectId" }),
 	//Type of the user
 	role: z.nativeEnum(USER_ROLES).default(USER_ROLES.USER),
+	permissions: z.array(z.string()),
 	active: z.boolean().default(true),
 	indicators: z.array(
 		z.object({
