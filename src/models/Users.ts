@@ -12,6 +12,7 @@ interface IUser extends Document {
 	resetPasswordExpires: Date | null;
 	company?: Types.ObjectId;
 	role: USER_ROLES;
+	permissions: string[];
 	active: boolean;
 	indicators: {
 		_id: Schema.Types.ObjectId;
@@ -71,6 +72,12 @@ const userSchema = new Schema<IUser>({
 		default: USER_ROLES.USER,
 		required: [true, "User type is required"],
 	},
+	permissions: [
+		{
+			type: String,
+			required: [true, "Permissions are required"],
+		},
+	],
 	//Flag to know if the user is active or not
 	active: {
 		type: Boolean,
