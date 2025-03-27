@@ -14,6 +14,8 @@ declare global {
 			CPANEL_APP_EMAIL: string;
 			CPANEL_APP_PASSWORD: string;
 			CPANEL_APP_HOST: string;
+			SECRET_KEY: string;
+			SALT: number;
 		}
 	}
 	namespace Express {
