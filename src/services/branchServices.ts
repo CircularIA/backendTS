@@ -6,9 +6,9 @@ export const getBranch = async (userId: string) => {
 	try {
 		const findUser = await User.findById(userId).populate("company");
 		if (!findUser) {
-			return findUser;
+			throw new Error("Usuario no encontrado");
 		} else {
-			if (findUser?.role === "super_admin") {
+			if (findUser.role === "super_admin") {
 				const branches = await Branch.find();
 				return branches;
 			} else if (findUser.role === "admin") {
@@ -17,7 +17,10 @@ export const getBranch = async (userId: string) => {
 				const dataCompany = await CompanyModel.findById(
 					companyUser
 				).populate("branches");
-				return dataCompany?.branches;
+				if (!dataCompany) {
+					throw new Error("Compañía no encontrada");
+				}
+				return dataCompany.branches;
 			} else {
 				const branches = await Branch.find({ assignedUsers: userId });
 				return branches;
