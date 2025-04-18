@@ -1,4 +1,4 @@
-import { loginUser } from "@src/services/authService";
+import { loginUser } from "@src/services/authServices";
 import { Request, Response } from "express";
 
 export const login = async (req: Request, res: Response): Promise<Response> => {

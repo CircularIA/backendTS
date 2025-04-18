@@ -132,6 +132,6 @@ userSchema.methods.generatePasswordReset = function () {
 	return token;
 };
 
-const UserModel = model("User", userSchema);
+const UserModel = model<IUser>("User", userSchema);
 
 export default UserModel;

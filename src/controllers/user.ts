@@ -5,11 +5,9 @@ import {
 	createRegularUser,
 	createSuperAdminUser,
 	createThemeUser,
-} from "@services/userService";
+} from "@src/services/userServices";
 
 export const createSuperAdmin = async (req: Request, res: Response) => {
-	console.log("create Super admin post");
-	console.log("Secret key", CONFIG.SECRET_KEY);
 	try {
 		const { username, email, password, secretKey } = req.body;
 		if (secretKey !== CONFIG.SECRET_KEY) {

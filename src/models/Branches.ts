@@ -10,7 +10,7 @@ interface IBranch extends Document {
 	status: boolean;
 	company: Types.ObjectId;
 	manager: Types.ObjectId;
-	inputDats: Types.ObjectId;
+	inputDats: Types.ObjectId[];
 	assignedUsers: Types.ObjectId[];
 }
 

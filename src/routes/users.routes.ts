@@ -8,7 +8,7 @@ import {
 } from "../controllers/user";
 
 import { verifyToken } from "@middlewares/auth";
-import { getUserById, getUsersByBranch } from "@services/userService";
+import { getUserById, getUsersByBranch } from "@src/services/userServices";
 import { Router } from "express";
 const userRouter = Router();
 

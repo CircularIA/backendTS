@@ -1,4 +1,4 @@
-import { getCompany } from "@src/services/companyService";
+import { getCompany } from "@src/services/companyServices";
 import { Request, Response } from "express";
 
 export const getCompanies = async (
