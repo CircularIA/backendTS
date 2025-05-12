@@ -26,17 +26,17 @@ export const getIndicators = (
 	}
 };
 
-export const getIndicatorInfo = (
+export const getIndicatorInfo = async (
 	req: Request<Pick<IndicatorParams, "indicatorId">>,
 	res: Response
 ) => {
 	try {
 		const { indicatorId } = req.params;
-		const indicatorInfo = getIndicatorInfoService(indicatorId);
-		res.status(200).json(indicatorInfo);
+		const indicatorInfo = await getIndicatorInfoService(indicatorId);
+		return res.status(200).json(indicatorInfo);
 	} catch (error: any) {
 		console.error(error);
-		res.status(500).json({ error: error.message });
+		return res.status(500).json({ error: error.message });
 	}
 };
 
