@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import { CONFIG } from "@src/config";
 import { USER_ROLES } from "@src/middlewares/roles";
 
-interface IUser extends Document {
+export interface IUser extends Document {
 	_id: Types.ObjectId;
 	username: string;
 	email: string;
