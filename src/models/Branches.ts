@@ -53,6 +53,6 @@ const branchSchema = new Schema<IBranch>(
 	{ timestamps: true }
 );
 
-const Branch = model("Branch", branchSchema);
+const BranchModel = model("Branch", branchSchema);
 
-export default Branch;
+export default BranchModel;
