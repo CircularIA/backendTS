@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
+import { CONFIG } from "@src/config";
 
 export interface CustomRequest extends Request {
 	token: string | jwt.JwtPayload;
@@ -18,7 +19,7 @@ export const verifyToken = (
 		return res.status(401).json({ message: "Acceso no autorizado" });
 	}
 
-	jwt.verify(token, process.env.JWT_SECRET!, (err, decoded) => {
+	jwt.verify(token, CONFIG.JWT_KEY, (err, decoded) => {
 		if (err) {
 			return res.status(401).json({ message: "Token inválido" });
 		}
