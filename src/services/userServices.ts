@@ -2,7 +2,7 @@ import { CONFIG } from "@src/config";
 import { USER_ROLES } from "@src/middlewares/roles";
 import Branch from "@src/models/Branches";
 import UserModel from "@src/models/Users";
-import { userEntitySchema } from "@src/schemas/user.schema";
+import { userEntitySchema } from "@src/schemas/user/userSchema";
 import {
 	generatePermissionByRole,
 	IndicatorsType,
