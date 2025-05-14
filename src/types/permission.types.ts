@@ -34,6 +34,7 @@ const generatePermission = (): string[] => {
 	const permissions: string[] = [];
 	Object.keys(Resources).forEach((resource) => {
 		Object.keys(Actions).forEach((action) => {
+			if (action === Actions.MANAGE) return;
 			permissions.push(`${resource}${Divider}${action}${Divider}`);
 		});
 	});
