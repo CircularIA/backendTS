@@ -1,12 +1,14 @@
 import authRouter from "./auth.routes";
 import branchRouter from "./branch.routes";
 import companyRouter from "./company.routes";
+import indicatorRouter from "./indicator.routes";
 import userRouter from "./users.routes";
 import { Router } from "express";
 
 const router = Router();
 
 router.use("/user", userRouter);
+router.use("/indicator", indicatorRouter);
 router.use("/auth", authRouter);
 router.use("/branch", branchRouter);
 router.use("/company", companyRouter);
