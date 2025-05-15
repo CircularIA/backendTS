@@ -6,6 +6,7 @@ import {
 	createSuperAdminUser,
 	createThemeUser,
 } from "@src/services/userServices";
+import { createAdminSchema } from "@src/schemas/user/userSchema";
 
 export const createSuperAdmin = async (req: Request, res: Response) => {
 	try {
@@ -30,14 +31,15 @@ export const createSuperAdmin = async (req: Request, res: Response) => {
 
 export const createAdmin = async (req: Request, res: Response) => {
 	try {
-		const { username, email, password, company } = req.body;
+		const parsed = createAdminSchema
+			.omit({ role: true, permissions: true })
+			.safeParse(req.body);
+		if (!parsed.success) {
+			return res.status(400).json({ message: "Invalid data" });
+		}
+		const { username, email, password, company } = parsed.data;
 
-		const user = await createAdminUser({
-			username,
-			email,
-			password,
-			company,
-		});
+		const user = await createAdminUser(username, email, password, company);
 
 		return res
 			.status(201)

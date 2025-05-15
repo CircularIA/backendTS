@@ -6,9 +6,7 @@ export const getCompanies = async (
 	res: Response
 ): Promise<Response> => {
 	try {
-		console.log("entro en el controlador");
 		const user = req.user;
-		console.log("user", user);
 		const company = await getCompany(user);
 		return res.status(200).json(company);
 	} catch (error) {

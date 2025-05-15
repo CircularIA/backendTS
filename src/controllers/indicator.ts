@@ -1,3 +1,4 @@
+import { indicatorSchema } from "@src/schemas/indicators/indicatorSchema";
 import {
 	getIndicatorInfoService,
 	getIndicatorsService,
@@ -40,21 +41,19 @@ export const getIndicatorInfo = async (
 	}
 };
 
-export const getIndicatorValue = (
-	req: Request<IndicatorParams>,
-	res: Response
-) => {
+export const getIndicatorValue = async (req: Request, res: Response) => {
 	try {
-		const { branchId, indicatorId, year, month } = req.params;
-		const indicatorValue = getIndicatorValueService(
-			branchId,
-			indicatorId,
-			year,
-			month
+		const { branch, indicator, year, month } = req.params;
+
+		const indicatorValue = await getIndicatorValueService(
+			branch,
+			indicator,
+			Number(year),
+			Number(month)
 		);
-		res.status(200).json(indicatorValue);
+		return res.status(200).json(indicatorValue);
 	} catch (error: any) {
 		console.error(error);
-		res.status(500).json({ error: error.message });
+		return res.status(500).json({ error: error.message });
 	}
 };
