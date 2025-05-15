@@ -35,7 +35,7 @@ const generatePermission = (): string[] => {
 	Object.keys(Resources).forEach((resource) => {
 		Object.keys(Actions).forEach((action) => {
 			if (action === Actions.MANAGE) return;
-			permissions.push(`${resource}${Divider}${action}${Divider}`);
+			permissions.push(`${resource}${Divider}${action}`);
 		});
 	});
 	return permissions;
@@ -43,35 +43,31 @@ const generatePermission = (): string[] => {
 
 const generateAdminPermission = (): string[] => {
 	return [
-		`${Resources.ENTERPRISES}${Divider}${Actions.READ}${Divider}`,
-		`${Resources.ENTERPRISES}${Divider}${Actions.UPDATE}${Divider}`,
-		`${Resources.BRANCHES}${Divider}${Actions.CREATE}${Divider}`,
-		`${Resources.BRANCHES}${Divider}${Actions.READ}${Divider}`,
-		`${Resources.BRANCHES}${Divider}${Actions.UPDATE}${Divider}`,
-		`${Resources.USER}${Divider}${Actions.MANAGE}${Divider}`,
-		`${Resources.INDICATORS}${Divider}${Actions.MANAGE}${Divider}`,
-		`${Resources.INPUT_DATS}${Divider}${Actions.MANAGE}${Divider}`,
-		`${Resources.ECONOMIC_INDICATORS}${Divider}${Actions.MANAGE}${Divider}`,
-		`${Resources.AMBIENTAL_INDICATORS}${Divider}${Actions.MANAGE}${Divider}`,
-		`${Resources.SOCIAL_INDICATORS}${Divider}${Actions.MANAGE}${Divider}`,
+		`${Resources.ENTERPRISES}${Divider}${Actions.READ}`,
+		`${Resources.ENTERPRISES}${Divider}${Actions.UPDATE}`,
+		`${Resources.BRANCHES}${Divider}${Actions.CREATE}`,
+		`${Resources.BRANCHES}${Divider}${Actions.READ}`,
+		`${Resources.BRANCHES}${Divider}${Actions.UPDATE}`,
+		`${Resources.USER}${Divider}${Actions.MANAGE}`,
+		`${Resources.INDICATORS}${Divider}${Actions.MANAGE}`,
+		`${Resources.INPUT_DATS}${Divider}${Actions.MANAGE}`,
+		`${Resources.ECONOMIC_INDICATORS}${Divider}${Actions.MANAGE}`,
+		`${Resources.AMBIENTAL_INDICATORS}${Divider}${Actions.MANAGE}`,
+		`${Resources.SOCIAL_INDICATORS}${Divider}${Actions.MANAGE}`,
 	];
 };
 
 const generateUserPermission = (): string[] => {
 	return [
-		`${Resources.INDICATORS}${Divider}${Actions.READ}${Divider}`,
-		`${Resources.INPUT_DATS}${Divider}${Actions.READ}${Divider}`,
-		`${Resources.INPUT_DATS}${Divider}${Actions.CREATE}${Divider}`,
-		`${Resources.INPUT_DATS}${Divider}${Actions.UPDATE}${Divider}`,
+		`${Resources.INDICATORS}${Divider}${Actions.READ}`,
+		`${Resources.INPUT_DATS}${Divider}${Actions.READ}`,
+		`${Resources.INPUT_DATS}${Divider}${Actions.CREATE}`,
+		`${Resources.INPUT_DATS}${Divider}${Actions.UPDATE}`,
 	];
 };
 
 const generateUserPermissionByTheme = (theme: IndicatorsType): string[] => {
-	return [
-		`${Resources[`${theme}_INDICATORS`]}${Divider}${
-			Actions.MANAGE
-		}${Divider}`,
-	];
+	return [`${Resources[`${theme}_INDICATORS`]}${Divider}${Actions.MANAGE}`];
 };
 
 //Admin can handle the actions above his enterprise

@@ -1,19 +1,28 @@
-export type IndicatorCategories = "Ambiental" | "Social" | "Economica";
+export const IndicatorCategoriesList = [
+	"Ambiental",
+	"Social",
+	"Economica",
+] as const;
 
-export type SourcesTypes =
-	| "Residuos"
-	| "Emisiones"
-	| "Energía"
-	| "Agua"
-	| "Cadena de suministros"
-	| "Ingreso"
-	| "Egreso"
-	| "Empleos"
-	| "Educación"
-	| "Interno"
-	| "Seguridad"
-	| "Sinergía";
+// Tipo de TS
+export type IndicatorCategories = (typeof IndicatorCategoriesList)[number];
 
+export const SourcesTypesList = [
+	"Residuos",
+	"Emisiones",
+	"Energía",
+	"Agua",
+	"Cadena de suministros",
+	"Ingreso",
+	"Egreso",
+	"Empleos",
+	"Educación",
+	"Interno",
+	"Seguridad",
+	"Sinergía",
+] as const;
+
+export type SourcesTypes = (typeof SourcesTypesList)[number];
 export interface Norm {
 	norm: string;
 	type: string;
