@@ -5,6 +5,7 @@ import Company from "@src/models/Company";
 export const getCompany = async (userId: string) => {
 	try {
 		const findUser = await User.findById(userId).populate("company");
+		console.log("user id", userId);
 		if (!findUser) {
 			throw new Error("User not found");
 		} else {
