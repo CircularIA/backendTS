@@ -46,3 +46,17 @@ export const userEntitySchema = z.object({
 });
 
 export type UserEntity = z.infer<typeof userEntitySchema>;
+
+//Schemas for the user creation
+
+export const createAdminSchema = z.object({
+	username: z.string(),
+	email: z.string().email({ message: "Invalid email format" }),
+	password: z
+		.string()
+		.min(6, { message: "Password must be at least 6 characters long" }),
+	company: z.string().regex(objectIdRegex, { message: "Invalid ObjectId" }),
+	//Type of the user
+	role: z.nativeEnum(USER_ROLES).default(USER_ROLES.ADMIN),
+	permissions: z.array(z.string()),
+});
