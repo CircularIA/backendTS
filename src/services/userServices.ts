@@ -79,25 +79,21 @@ export const createSuperAdminUser = async (userData: any) => {
 	}
 };
 
-export const createAdminUser = async (userData: any) => {
+export const createAdminUser = async (
+	username: string,
+	email: string,
+	password: string,
+	company: string
+) => {
 	console.log("enter in the service");
 	try {
-		const validatedData = userEntitySchema
-			.omit({
-				_id: true,
-				permissions: true,
-				company: true,
-				indicators: true,
-				role: true,
-			})
-			.parse(userData);
+		const hashedPassword = await bcrypt.hash(password, Number(CONFIG.SALT));
 
-		const hashedPassword = await bcrypt.hash(
-			validatedData.password,
-			CONFIG.SALT
-		);
 		const newUser = new UserModel({
-			...validatedData,
+			_id: new mongoose.Types.ObjectId(),
+			username,
+			email,
+			company,
 			password: hashedPassword,
 			role: USER_ROLES.ADMIN,
 			permissions: generatePermissionByRole("ADMIN"),

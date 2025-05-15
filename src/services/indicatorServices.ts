@@ -139,6 +139,7 @@ export const getIndicatorValueService = async (
 					monthValues.push(monthValue);
 				}
 			}
+			return monthValues;
 		} else {
 			const startDate = new Date(year, month - 1, 1, 0, 0, 0, 0);
 			const endDate = new Date(year, month, 0, 23, 59, 59, 999);
@@ -201,9 +202,10 @@ export const getIndicatorValueService = async (
 				monthValue.value = value;
 				monthValues.push(monthValue);
 			}
+			return monthValues;
 		}
 	} catch (error) {
-		console.error(error);
+		console.error("error al obtener el valor", error);
 		throw new Error("Error al obtener el valor del indicador");
 	}
 };
