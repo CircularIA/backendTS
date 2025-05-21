@@ -9,30 +9,37 @@ export enum USER_ROLES {
 	SOCIAL_USER = "social_user", //Social user has access to the social part of the
 }
 
-export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
-	if (req.user && req.user.role === USER_ROLES.ADMIN) {
-		return next();
-	} else {
-		return res.status(403).json({ message: "Unauthorized access" });
-	}
-};
+// Mapa jerárquico, del más poderoso al menos poderoso
+const ROLE_HIERARCHY: USER_ROLES[] = [
+	USER_ROLES.SUPER_ADMIN,
+	USER_ROLES.ADMIN,
+	USER_ROLES.ECONOMIC_USER,
+	USER_ROLES.AMBIENTAL_USER,
+	USER_ROLES.SOCIAL_USER,
+	USER_ROLES.USER,
+];
 
-export const isSuperAdmin = (
-	req: Request,
-	res: Response,
-	next: NextFunction
-) => {
-	if (req.user && req.user.role === USER_ROLES.SUPER_ADMIN) {
-		return next();
-	} else {
-		return res.status(403).json({ message: "Unauthorized access" });
-	}
-};
+export const authorizeRoles = (...allowedRoles: USER_ROLES[]) => {
+	return (req: Request, res: Response, next: NextFunction) => {
+		const userRole = req.user?.role as USER_ROLES;
 
-export const isUser = (req: Request, res: Response, next: NextFunction) => {
-	if (req.user && req.user.role === USER_ROLES.USER) {
-		return next();
-	} else {
-		return res.status(403).json({ message: "Unauthorized access" });
-	}
+		if (!userRole) {
+			return res.status(401).json({ message: "No role found in user" });
+		}
+
+		// Encuentra el nivel jerárquico del rol del usuario
+		const userRoleIndex = ROLE_HIERARCHY.indexOf(userRole);
+
+		// Verifica si el usuario tiene al menos el nivel de alguno de los roles permitidos
+		const isAuthorized = allowedRoles.some((role) => {
+			const requiredRoleIndex = ROLE_HIERARCHY.indexOf(role);
+			return userRoleIndex <= requiredRoleIndex; // menor índice = mayor privilegio
+		});
+
+		if (isAuthorized) {
+			return next();
+		} else {
+			return res.status(403).json({ message: "Unauthorized access" });
+		}
+	};
 };
