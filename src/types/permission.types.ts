@@ -1,6 +1,6 @@
 import { USER_ROLES } from "@src/middlewares/roles";
 
-const Resources = {
+export const Resources = {
 	USER: "USER",
 	ADMIN: "ADMIN",
 	SUPER_ADMIN: "SUPER_ADMIN",
@@ -13,7 +13,9 @@ const Resources = {
 	SOCIAL_INDICATORS: "SOCIAL_INDICATORS",
 };
 
-const Actions = {
+type ResourcesType = (typeof Resources)[keyof typeof Resources];
+
+export const Actions = {
 	CREATE: "CREATE",
 	READ: "READ",
 	UPDATE: "UPDATE",
@@ -21,7 +23,16 @@ const Actions = {
 	MANAGE: "MANAGE", //Action that resumes all the actions above a resource
 };
 
+type ActionsType = (typeof Actions)[keyof typeof Actions];
+
 const Divider = ":";
+
+export const createFormatPermission = (
+	resource: ResourcesType,
+	action: ActionsType
+): string => {
+	return `${resource}${Divider}${action}`;
+};
 
 export type IndicatorsType = "ECONOMIC" | "AMBIENTAL" | "SOCIAL";
 
