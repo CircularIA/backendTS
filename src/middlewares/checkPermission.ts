@@ -1,4 +1,3 @@
-import UserModel from "@src/models/Users";
 import { NextFunction, Request, Response } from "express";
 
 export const checkPermission = (permission: string) => {
