@@ -32,6 +32,7 @@ export interface IUser extends Document {
 		token: string;
 		userId: string;
 		userRole: string;
+		permissions: string[];
 	};
 	refreshToken: () => { token: string; userId: string; userRole: string };
 	generatePasswordReset: () => string;
@@ -113,7 +114,13 @@ userSchema.methods.generateAuthToken = function () {
 	const token = jwt.sign({ _id: this._id, role: this.role }, CONFIG.JWT_KEY, {
 		expiresIn: CONFIG.JWT_EXPIRES_IN,
 	});
-	return { token, userId: this._id, userRole: this.role };
+	return {
+		token,
+		userId: this._id,
+		userRole: this.role,
+		userName: this.username,
+		userPermissions: this.permissions,
+	};
 };
 
 userSchema.methods.refreshToken = function () {
