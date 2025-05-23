@@ -15,7 +15,7 @@ companyRouter.get(
 	"/",
 	verifyToken,
 	authorizeRoles(USER_ROLES.USER),
-	checkPermission(createFormatPermission(Resources.BRANCHES, Actions.READ)),
+	// checkPermission(createFormatPermission(Resources.BRANCHES, Actions.READ)),
 	getCompanies
 );
 

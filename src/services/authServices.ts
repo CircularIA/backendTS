@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 export const loginUser = async (email: string, password: string) => {
 	try {
 		const user = await UserModel.findOne({ email });
+		console.log("User found:", user);
 		if (!user) throw new Error("Invalid credentials");
 
 		const isPasswordValid = await bcrypt.compare(password, user.password);
