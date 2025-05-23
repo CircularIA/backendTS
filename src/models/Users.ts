@@ -111,15 +111,23 @@ const userSchema = new Schema<IUser>({
 });
 
 userSchema.methods.generateAuthToken = function () {
-	const token = jwt.sign({ _id: this._id, role: this.role }, CONFIG.JWT_KEY, {
-		expiresIn: CONFIG.JWT_EXPIRES_IN,
-	});
+	const token = jwt.sign(
+		{
+			_id: this._id,
+			role: this.role,
+			permissions: this.permissions,
+			active: this.active,
+		},
+		CONFIG.JWT_KEY,
+		{
+			expiresIn: CONFIG.JWT_EXPIRES_IN,
+		}
+	);
 	return {
 		token,
 		userId: this._id,
 		userRole: this.role,
 		userName: this.username,
-		userPermissions: this.permissions,
 	};
 };
 
