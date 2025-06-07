@@ -1,6 +1,8 @@
 import { CONFIG } from "@src/config";
+import { NotFoundError } from "@src/errors/NotFoundError";
 import { USER_ROLES } from "@src/middlewares/roles";
 import Branch from "@src/models/Branches";
+import CompanyModel from "@src/models/Company";
 import UserModel from "@src/models/Users";
 import { userEntitySchema } from "@src/schemas/user/userSchema";
 import {
@@ -107,24 +109,32 @@ export const createAdminUser = async (
 	}
 };
 
-export const createRegularUser = async (userData: any) => {
+export const createRegularUser = async (
+	username: string,
+	email: string,
+	password: string,
+	company: string
+) => {
 	try {
-		const validatedData = userEntitySchema
-			.omit({ _id: true })
-			.parse(userData);
-
-		const hashedPassword = await bcrypt.hash(
-			validatedData.password,
-			CONFIG.SALT
-		);
+		const hashedPassword = await bcrypt.hash(password, CONFIG.SALT);
+		const companyModel = await CompanyModel.findById(company);
+		if (!companyModel) {
+			throw new NotFoundError("Company not found");
+		}
+		const newID = new mongoose.Types.ObjectId();
 		const newUser = new UserModel({
-			...validatedData,
+			_id: newID,
+			username,
+			email,
+			company,
+			branches: companyModel.branches,
 			password: hashedPassword,
 			role: USER_ROLES.USER,
 			permissions: generatePermissionByRole("USER"),
 		});
 
 		await newUser.save();
+		//Have to add the new user to the
 		return newUser;
 	} catch (error) {
 		console.error("Error creating user:", error);
