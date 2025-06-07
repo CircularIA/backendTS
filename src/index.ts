@@ -1,12 +1,13 @@
-import doteenv from "dotenv";
+import dotenv from "dotenv";
 //Configuración de dotenv
-doteenv.config();
+dotenv.config();
 
 import express from "express";
 import cors from "cors";
 import { connectDB } from "./database";
 import { corsConfigure } from "./config/corsConfigure";
 import router from "./routes/routes";
+import { errorHandler } from "./middlewares/errorHandler";
 
 const app = express();
 const DB = process.env.MONGO_URI || "";
@@ -17,6 +18,8 @@ app.use(cors(corsConfigure)); //Para que el servidor entienda CORS
 
 //Routes
 app.use("/api/v1", router);
+
+app.use(errorHandler);
 
 //Connect to MongoDB
 connectDB(DB);
