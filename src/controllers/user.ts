@@ -6,7 +6,10 @@ import {
 	createSuperAdminUser,
 	createThemeUser,
 } from "@src/services/userServices";
-import { createAdminSchema } from "@src/schemas/user/userSchema";
+import {
+	createAdminSchema,
+	createRegularUserSchema,
+} from "@src/schemas/user/userSchema";
 
 export const createSuperAdmin = async (req: Request, res: Response) => {
 	try {
@@ -51,13 +54,20 @@ export const createAdmin = async (req: Request, res: Response) => {
 
 export const createUser = async (req: Request, res: Response) => {
 	try {
-		const { username, email, password, company } = req.body;
-		const user = await createRegularUser({
+		const parsed = createRegularUserSchema
+			.omit({ role: true, permissions: true })
+			.safeParse(req.body);
+		if (!parsed.success) {
+			return res.status(400).json({ message: "Invalid data" });
+		}
+		const { username, email, password, company } = parsed.data;
+		//First instance definy the whole branch to the user
+		const user = await createRegularUser(
 			username,
 			email,
 			password,
-			company,
-		});
+			company
+		);
 
 		return res
 			.status(201)
