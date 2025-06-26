@@ -29,7 +29,7 @@ indicatorRouter.get(
 );
 
 indicatorRouter.get(
-	"/values/:branch/:indicator/:year/:month?",
+	"/values/:branch/:indicator/:year/:month",
 	verifyToken,
 	checkPermission(createFormatPermission(Resources.INDICATORS, Actions.READ)),
 	getIndicatorValue
