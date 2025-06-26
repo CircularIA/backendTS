@@ -1,6 +1,9 @@
-import User from "@models/Users";
+import User, { IUser } from "@models/Users";
+import { ServiceError } from "@src/errors/ServiceError";
 import { USER_ROLES } from "@src/middlewares/roles";
 import Company from "@src/models/Company";
+import { Types } from "mongoose";
+import { assignNewUserToBranch } from "./branchServices";
 
 export const getCompany = async (userId: string) => {
 	try {
@@ -31,5 +34,25 @@ export const getCompany = async (userId: string) => {
 	} catch (error) {
 		console.error("Error al obtener las sucursales:", error);
 		throw new Error("Error al obtener las sucursales");
+	}
+};
+
+export const assignNewUserToCompanyBranches = async (
+	userId: Types.ObjectId,
+	companyBranches: Types.ObjectId[]
+) => {
+	try {
+		const promiseArray = companyBranches.map(async (branchId) =>
+			assignNewUserToBranch(userId, branchId.toString())
+		);
+		//Execute all promises in parallel
+		await Promise.all(promiseArray);
+		return true;
+	} catch (error) {
+		console.error("Error in assignNewUserToCompanyBranches", error);
+		throw new ServiceError(
+			"Error al asignar un usuario a las sucursales de la compañia",
+			error
+		);
 	}
 };
