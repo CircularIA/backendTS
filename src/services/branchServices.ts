@@ -1,8 +1,9 @@
-import User from "@models/Users";
+import User, { IUser } from "@models/Users";
 import { NotFoundError } from "@src/errors/NotFoundError";
 import { ServiceError } from "@src/errors/ServiceError";
 import Branch from "@src/models/Branches";
 import CompanyModel from "@src/models/Company";
+import { Types } from "mongoose";
 
 export const getBranch = async (userId: string) => {
 	try {
@@ -35,15 +36,22 @@ export const getBranch = async (userId: string) => {
 };
 
 export const assignNewUserToBranch = async (
-	userId: string,
+	userId: Types.ObjectId,
 	branchId: string
 ) => {
 	try {
-		const user = await User.findById(userId);
-		if (!user) throw new NotFoundError("Usuario no encontrado");
-
 		const branch = await Branch.findById(branchId);
 		if (!branch) throw new NotFoundError("Sucursal no encontrada");
+		if (!branch.assignedUsers.includes(userId)) {
+			branch.assignedUsers.push(userId);
+			await branch.save();
+		} else {
+			throw new ServiceError(
+				"El usuario ya está asignado a esta sucursal",
+				null
+			);
+		}
+		return branch;
 	} catch (error) {
 		console.error("Error in assigned New USer to branch", error);
 		throw new ServiceError(
