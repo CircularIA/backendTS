@@ -12,6 +12,8 @@ import {
 } from "@src/types/permission.types";
 import bcrypt from "bcrypt";
 import mongoose from "mongoose";
+import { assignNewUserToBranch } from "./branchServices";
+import { assignNewUserToCompanyBranches } from "./companyServices";
 
 export const getUsers = async () => {
 	try {
@@ -134,7 +136,8 @@ export const createRegularUser = async (
 		});
 
 		await newUser.save();
-		//Have to add the new user to the
+		//Have to add the new user to the branch
+		await assignNewUserToCompanyBranches(newID, companyModel.branches);
 		return newUser;
 	} catch (error) {
 		console.error("Error creating user:", error);
