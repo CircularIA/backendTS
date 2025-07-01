@@ -13,13 +13,14 @@ interface IndicatorParams {
 	month?: number;
 }
 
-export const getIndicators = (
+export const getIndicators = async (
 	req: Request<Pick<IndicatorParams, "branchId">>,
 	res: Response
 ) => {
 	try {
 		const { branchId } = req.params;
-		const indicators = getIndicatorsService(branchId);
+		const indicators = await getIndicatorsService(branchId);
+		console.log("🚀 Indicators", indicators);
 		res.status(200).json(indicators);
 	} catch (error: any) {
 		console.error(error);
