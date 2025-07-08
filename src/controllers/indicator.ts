@@ -1,4 +1,3 @@
-import { indicatorSchema } from "@src/schemas/indicators/indicatorSchema";
 import {
 	getIndicatorInfoService,
 	getIndicatorsService,

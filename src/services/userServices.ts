@@ -12,7 +12,6 @@ import {
 } from "@src/types/permission.types";
 import bcrypt from "bcrypt";
 import mongoose from "mongoose";
-import { assignNewUserToBranch } from "./branchServices";
 import { assignNewUserToCompanyBranches } from "./companyServices";
 
 export const getUsers = async () => {

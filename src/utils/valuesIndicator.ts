@@ -880,6 +880,8 @@ const getValue = (
 		});
 		return { result: 0, details };
 	}
+
+	return undefined;
 };
 
 export { getValue };

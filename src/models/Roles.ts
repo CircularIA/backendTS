@@ -1,4 +1,4 @@
-import { Schema, model, Types } from "mongoose";
+import { Schema, Types, model } from "mongoose";
 
 const roleSchema = new Schema({
 	name: {
@@ -17,3 +17,7 @@ const roleSchema = new Schema({
 		},
 	],
 });
+
+const Role = model("Role", roleSchema);
+
+export default Role;
