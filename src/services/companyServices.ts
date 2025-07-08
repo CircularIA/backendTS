@@ -1,4 +1,4 @@
-import User, { IUser } from "@models/Users";
+import User from "@src/models/Users";
 import { ServiceError } from "@src/errors/ServiceError";
 import { USER_ROLES } from "@src/middlewares/roles";
 import Company from "@src/models/Company";
