@@ -6,7 +6,7 @@
 		"tsc": "tsc",
 		"dev": "ts-node-dev --respawn --transpile-only -r tsconfig-paths/register src/index.ts",
 		"build": "tsc && tsc-alias",
-		"start": "node dist/index.js",
+		"start": "node build/index.js",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"keywords": [],
