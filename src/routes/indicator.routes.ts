@@ -15,13 +15,6 @@ import { Router } from "express";
 const indicatorRouter = Router();
 
 indicatorRouter.get(
-	"/indicator/:indicatorId",
-	verifyToken,
-	checkPermission(createFormatPermission(Resources.INDICATORS, Actions.READ)),
-	getIndicatorInfo
-);
-
-indicatorRouter.get(
 	"/branch/:branchId",
 	verifyToken,
 	checkPermission(createFormatPermission(Resources.INDICATORS, Actions.READ)),
@@ -29,7 +22,14 @@ indicatorRouter.get(
 );
 
 indicatorRouter.get(
-	"/values/:branch/:indicator/:year/:month",
+	"/branch/info/:indicatorId",
+	verifyToken,
+	checkPermission(createFormatPermission(Resources.INDICATORS, Actions.READ)),
+	getIndicatorInfo
+);
+
+indicatorRouter.get(
+	"/values/:branch/:indicator/:year/:month?",
 	verifyToken,
 	checkPermission(createFormatPermission(Resources.INDICATORS, Actions.READ)),
 	getIndicatorValue

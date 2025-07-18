@@ -1,4 +1,4 @@
-import User, { IUser } from "@models/Users";
+import User from "@src/models/Users";
 import { NotFoundError } from "@src/errors/NotFoundError";
 import { ServiceError } from "@src/errors/ServiceError";
 import Branch from "@src/models/Branches";
