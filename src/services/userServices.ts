@@ -4,7 +4,11 @@ import { USER_ROLES } from "@src/middlewares/roles";
 import Branch from "@src/models/Branches";
 import CompanyModel from "@src/models/Company";
 import UserModel from "@src/models/Users";
-import { userEntitySchema } from "@src/schemas/user/userSchema";
+import {
+	createRegularUserSchema,
+	createThemeUserSchema,
+	userEntitySchema,
+} from "@src/schemas/user/userSchema";
 import {
 	generatePermissionByRole,
 	IndicatorsType,
@@ -12,7 +16,7 @@ import {
 } from "@src/types/permission.types";
 import bcrypt from "bcrypt";
 import mongoose from "mongoose";
-import { assignNewUserToCompanyBranches } from "./companyServices";
+import { createSalt } from "@src/utils/bcrypt";
 
 export const getUsers = async () => {
 	try {
@@ -110,25 +114,27 @@ export const createAdminUser = async (
 	}
 };
 
-export const createRegularUser = async (
-	username: string,
-	email: string,
-	password: string,
-	company: string
-) => {
+export const createRegularUser = async (userData: any) => {
 	try {
-		const hashedPassword = await bcrypt.hash(password, CONFIG.SALT);
-		const companyModel = await CompanyModel.findById(company);
+		const validatedData = createRegularUserSchema.parse(userData);
+
+		const hashedPassword = await bcrypt.hash(
+			validatedData.password,
+			createSalt()
+		);
+		const companyModel = await CompanyModel.findById(validatedData.company);
 		if (!companyModel) {
 			throw new NotFoundError("Company not found");
+		}
+		const branchModel = await Branch.findById(validatedData.branch);
+		if (!branchModel) {
+			throw new NotFoundError("Branch not found");
 		}
 		const newID = new mongoose.Types.ObjectId();
 		const newUser = new UserModel({
 			_id: newID,
-			username,
-			email,
-			company,
-			branches: companyModel.branches,
+			...validatedData,
+			branches: [companyModel.branches],
 			password: hashedPassword,
 			role: USER_ROLES.USER,
 			permissions: generatePermissionByRole("USER"),
@@ -136,7 +142,10 @@ export const createRegularUser = async (
 
 		await newUser.save();
 		//Have to add the new user to the branch
-		await assignNewUserToCompanyBranches(newID, companyModel.branches);
+		// await assignNewUserToCompanyBranches(newID, companyModel.branches);
+		await Branch.findByIdAndUpdate(validatedData.branch, {
+			$push: { assignedUsers: newUser._id },
+		});
 		return newUser;
 	} catch (error) {
 		console.error("Error creating user:", error);
@@ -146,9 +155,7 @@ export const createRegularUser = async (
 
 export const createThemeUser = async (userData: any, type: IndicatorsType) => {
 	try {
-		const validatedData = userEntitySchema
-			.omit({ _id: true })
-			.parse(userData);
+		const validatedData = createThemeUserSchema.parse(userData);
 
 		let role = USER_ROLES.USER;
 		let permission: RoleType = "USER";
@@ -162,18 +169,29 @@ export const createThemeUser = async (userData: any, type: IndicatorsType) => {
 			role = USER_ROLES.ECONOMIC_USER;
 			permission = "ECONOMIC_USER";
 		}
+		console.log("permissions of the theme user", permission);
+		console.log("config salt", CONFIG.SALT);
 
 		const hashedPassword = await bcrypt.hash(
 			validatedData.password,
-			CONFIG.SALT
+			createSalt()
 		);
 		const newUser = new UserModel({
 			...validatedData,
+			_id: new mongoose.Types.ObjectId(),
 			password: hashedPassword,
 			role: role,
 			permissions: generatePermissionByRole(permission),
+			branches: [validatedData.branch],
 		});
 		await newUser.save();
+		console.log("new user created", newUser);
+		//Have to add the new user to the branch
+		await Branch.findByIdAndUpdate(validatedData.branch, {
+			$push: { assignedUsers: newUser._id },
+		});
+		// await assignNewUserToCompanyBranches(newID, validatedData.branches);
+		console.log("new user added to branch");
 		return newUser;
 	} catch (error) {
 		console.error("Error creating theme user:", error);
