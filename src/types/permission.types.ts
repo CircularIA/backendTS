@@ -23,7 +23,7 @@ export const Actions = {
 	MANAGE: "MANAGE", //Action that resumes all the actions above a resource
 };
 
-type ActionsType = (typeof Actions)[keyof typeof Actions];
+export type ActionsType = (typeof Actions)[keyof typeof Actions];
 
 const Divider = ":";
 
@@ -93,4 +93,21 @@ const RolePermissions = {
 
 export const generatePermissionByRole = (role: RoleType): string[] => {
 	return RolePermissions[role];
+};
+
+export const getResourceByRole = (role: RoleType): ResourcesType | null => {
+	switch (role) {
+		case "AMBIENTAL_USER":
+			return Resources.AMBIENTAL_INDICATORS;
+		case "ECONOMIC_USER":
+			return Resources.ECONOMIC_INDICATORS;
+		case "SOCIAL_USER":
+			return Resources.SOCIAL_INDICATORS;
+		case "ADMIN":
+		case "SUPER_ADMIN":
+		case "USER":
+			return Resources.INDICATORS;
+		default:
+			return null;
+	}
 };

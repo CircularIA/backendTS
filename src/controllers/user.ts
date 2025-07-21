@@ -60,14 +60,15 @@ export const createUser = async (req: Request, res: Response) => {
 		if (!parsed.success) {
 			return res.status(400).json({ message: "Invalid data" });
 		}
-		const { username, email, password, company } = parsed.data;
+		const { username, email, password, company, branch } = parsed.data;
 		//First instance definy the whole branch to the user
-		const user = await createRegularUser(
+		const user = await createRegularUser({
 			username,
 			email,
 			password,
-			company
-		);
+			company,
+			branch,
+		});
 
 		return res
 			.status(201)
@@ -79,13 +80,14 @@ export const createUser = async (req: Request, res: Response) => {
 
 export const createAmbientalUser = async (req: Request, res: Response) => {
 	try {
-		const { username, email, password, company } = req.body;
+		const { username, email, password, company, branch } = req.body;
 		const user = await createThemeUser(
 			{
 				username,
 				email,
 				password,
 				company,
+				branch,
 			},
 			"AMBIENTAL"
 		);

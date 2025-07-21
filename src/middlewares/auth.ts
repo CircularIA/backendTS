@@ -26,7 +26,7 @@ export const verifyToken = (
 		// Agrega el token decodificado al objeto de solicitud para su uso posterior
 		(req as CustomRequest).token = decoded || token;
 		(req as CustomRequest).user = decoded;
-		console.log("Token decodificado:", decoded);
+		// console.log("Token decodificado:", decoded);
 		next(); // Continúa con la siguiente función middleware o controlador
 		return;
 	});
