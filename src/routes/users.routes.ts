@@ -4,11 +4,14 @@ import {
 	createEconomicUser,
 	createSocialUser,
 	createSuperAdmin,
-	createUser,
 } from "../controllers/user";
 
 import { verifyToken } from "@middlewares/auth";
-import { getUserById, getUsersByBranch } from "@src/services/userServices";
+import {
+	createRegularUser,
+	getUserById,
+	getUsersByBranch,
+} from "@src/services/userServices";
 import { Router } from "express";
 const userRouter = Router();
 
@@ -18,7 +21,7 @@ userRouter.get("/branch/:branchId", verifyToken, getUsersByBranch);
 //Post Routes
 userRouter.post("/createSuperAdmin", createSuperAdmin);
 userRouter.post("/createAdmin", verifyToken, createAdmin);
-userRouter.post("/createUser", verifyToken, createUser);
+userRouter.post("/createUser", verifyToken, createRegularUser);
 userRouter.post("/createAmbientalUser", verifyToken, createAmbientalUser);
 userRouter.post("/createEconomicUser", verifyToken, createEconomicUser);
 userRouter.post("/createSocialUser", verifyToken, createSocialUser);
