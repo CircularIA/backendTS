@@ -269,3 +269,20 @@ export const detailsByEmissionSourceOther: Record<
 		"Planta de tratamiento de riles",
 	],
 };
+
+export type EmissionSourceDetail =
+	| {
+			type_emission: "DIRECTA";
+			source_emission: SourceEmissionDirect;
+			detail_emission: (typeof detailsByEmissionSource)[SourceEmissionDirect][number];
+	  }
+	| {
+			type_emission: "INDIRECTA";
+			source_emission: SourceEmissionIndirect;
+			detail_emission: (typeof detailsByEmissionSourceIndirect)[SourceEmissionIndirect][number];
+	  }
+	| {
+			type_emission: "OTRAS";
+			source_emission: SourceEmissionOther;
+			detail_emission: (typeof detailsByEmissionSourceOther)[SourceEmissionOther][number];
+	  };
