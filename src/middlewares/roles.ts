@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 
 export enum USER_ROLES {
-	ADMIN = "admin", //Admin has full access to the company
-	SUPER_ADMIN = "super_admin", //Just for the circularia team, not for the users
-	USER = "user", //User has restringed access to the system
-	ECONOMIC_USER = "economic_user", //Economic user has access to the economic part of the system
-	AMBIENTAL_USER = "ambiental_user", //Ambiental user has access to the ambiental part of the system
-	SOCIAL_USER = "social_user", //Social user has access to the social part of the
+	ADMIN = "ADMIN", //Admin has full access to the company
+	SUPER_ADMIN = "SUPER_ADMIN", //Just for the circularia team, not for the users
+	USER = "USER", //User has restringed access to the system
+	ECONOMIC_USER = "ECONOMIC_USER", //Economic user has access to the economic part of the system
+	AMBIENTAL_USER = "AMBIENTAL_USER", //Ambiental user has access to the ambiental part of the system
+	SOCIAL_USER = "SOCIAL_USER", //Social user has access to the social part of the
 }
 
 // Mapa jerárquico, del más poderoso al menos poderoso

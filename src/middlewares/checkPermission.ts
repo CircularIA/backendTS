@@ -1,19 +1,29 @@
 import { Actions } from "@src/types/permission.types";
 import { NextFunction, Request, Response } from "express";
 
-export const checkPermission = (permission: string) => {
+type PermissionInput = string | ((req: Request) => string);
+
+export const checkPermission = (permissionInput: PermissionInput) => {
 	return (req: Request, res: Response, next: NextFunction) => {
-		const user = req.user; // Suponiendo que el usuario está adjunto al objeto req
+		const permission =
+			typeof permissionInput === "function"
+				? permissionInput(req)
+				: permissionInput;
+
+		const user = (req as any).user;
+
 		console.log("user.permissions", user.permissions);
+		console.log("permission", permission);
+
 		const resource = permission.split(":")[0];
+
 		if (user && user.permissions) {
 			if (user.permissions.includes(permission)) {
 				next();
 			} else if (
 				user.permissions.includes(`${resource}:${Actions.MANAGE}`) &&
-				resource != undefined
+				resource !== undefined
 			) {
-				//If the user has the permission to manage the resource, allow access
 				next();
 			} else {
 				res.status(403).json({
