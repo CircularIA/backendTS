@@ -1,37 +1,49 @@
-import { Actions } from "@src/types/permission.types";
-import { NextFunction, Request, Response } from "express";
+// middlewares/checkPermission.ts
+import {
+	Actions,
+	ActionsType,
+	createFormatPermission,
+	getResourceByRole,
+	RoleType,
+} from "@src/types/permission.types";
+import { Request, Response, NextFunction } from "express";
 
-type PermissionInput = string | ((req: Request) => string);
+interface PermissionOptions {
+	action: ActionsType;
+	resourceOverride?: string; // opcional, para recursos específicos si se desea forzar
+}
 
-export const checkPermission = (permissionInput: PermissionInput) => {
+export const checkPermissionByRole = ({
+	action,
+	resourceOverride,
+}: PermissionOptions) => {
 	return (req: Request, res: Response, next: NextFunction) => {
-		const permission =
-			typeof permissionInput === "function"
-				? permissionInput(req)
-				: permissionInput;
-
 		const user = (req as any).user;
-
-		console.log("user.permissions", user.permissions);
-		console.log("permission", permission);
-
-		const resource = permission.split(":")[0];
-
-		if (user && user.permissions) {
-			if (user.permissions.includes(permission)) {
-				next();
-			} else if (
-				user.permissions.includes(`${resource}:${Actions.MANAGE}`) &&
-				resource !== undefined
-			) {
-				next();
-			} else {
-				res.status(403).json({
-					message: "No tienes permiso para realizar esta acción",
-				});
-			}
-		} else {
-			res.status(500).json({ message: "Error interno del servidor" });
+		if (!user || !user.role || !user.permissions) {
+			return res.status(401).json({ message: "No autorizado" });
 		}
+
+		// Determinar el recurso según el rol, o usar override si lo mandan explícito
+		const role = user.role as RoleType;
+		const resource = resourceOverride || getResourceByRole(role);
+
+		if (!resource) {
+			return res.status(403).json({
+				message: "No se pudo determinar el recurso para el rol",
+			});
+		}
+
+		const permissionToCheck = createFormatPermission(resource, action);
+
+		if (
+			user.permissions.includes(permissionToCheck) ||
+			user.permissions.includes(`${resource}:${Actions.MANAGE}`)
+		) {
+			return next();
+		}
+
+		return res
+			.status(403)
+			.json({ message: "No tienes permiso para realizar esta acción" });
 	};
 };

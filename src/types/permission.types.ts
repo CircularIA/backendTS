@@ -23,7 +23,7 @@ export const Actions = {
 	MANAGE: "MANAGE", //Action that resumes all the actions above a resource
 };
 
-type ActionsType = (typeof Actions)[keyof typeof Actions];
+export type ActionsType = (typeof Actions)[keyof typeof Actions];
 
 const Divider = ":";
 
