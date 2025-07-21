@@ -68,7 +68,18 @@ export const createRegularUserSchema = z.object({
 		.string()
 		.min(6, { message: "Password must be at least 6 characters long" }),
 	company: z.string().regex(objectIdRegex, { message: "Invalid ObjectId" }),
+	branch: z.string().regex(objectIdRegex, { message: "Invalid ObjectId" }),
 	//Type of the user
 	role: z.nativeEnum(USER_ROLES).default(USER_ROLES.USER),
 	permissions: z.array(z.string()),
+});
+
+export const createThemeUserSchema = z.object({
+	username: z.string(),
+	email: z.string().email({ message: "Invalid email format" }),
+	password: z
+		.string()
+		.min(6, { message: "Password must be at least 6 characters long" }),
+	company: z.string().regex(objectIdRegex, { message: "Invalid ObjectId" }),
+	branch: z.string().regex(objectIdRegex, { message: "Invalid ObjectId" }),
 });
