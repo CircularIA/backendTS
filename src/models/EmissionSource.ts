@@ -7,7 +7,7 @@ import {
 } from "@src/types/emissionSource.types";
 import { model, Schema, Types } from "mongoose";
 
-interface IEmissionSource extends Document {
+export interface IEmissionSource extends Document {
 	_id: Types.ObjectId;
 	type_emission: TypeEmission;
 	source_emission:
@@ -23,11 +23,11 @@ interface IEmissionSource extends Document {
 	measurement: Measurements;
 	quantity: number;
 	//Files of evidence
-	files: File[] | File;
+	files?: File[] | File;
 	//Metrics to calculate the footprint
 	emission_factor: number;
 	unit_factor: string;
-	origin_factor: string;
+	origin_factor?: string;
 }
 
 const emissionSourceSchema = new Schema<IEmissionSource>(
@@ -45,7 +45,7 @@ const emissionSourceSchema = new Schema<IEmissionSource>(
 		user: { type: Schema.Types.ObjectId, ref: "User", required: true },
 		measurement: { type: String, required: true },
 		quantity: { type: Number, required: true },
-		files: { type: [Schema.Types.Mixed], required: true },
+		files: { type: [Schema.Types.Mixed] },
 		emission_factor: { type: Number, required: true },
 		unit_factor: { type: String, required: true },
 		origin_factor: { type: String },
