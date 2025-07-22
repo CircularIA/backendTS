@@ -1,3 +1,6 @@
+import { IEmissionSource } from "@src/models/EmissionSource";
+import { Measurements } from "./common.types";
+
 export type TypeEmission = "DIRECTA" | "INDIRECTA" | "OTRAS";
 
 export type SourceEmissionDirect =
@@ -98,6 +101,417 @@ export const detailsByEmissionSource: Record<SourceEmissionDirect, string[]> = {
 		"Cosecha",
 		"Incremento de biomas arbórea",
 	],
+};
+
+interface EmissionFactor
+	extends Pick<
+		IEmissionSource,
+		"measurement" | "emission_factor" | "unit_factor" | "origin_factor"
+	> {
+	name: string;
+}
+
+export const emissionFactorByEmissionSource: Record<
+	SourceEmissionDirect,
+	EmissionFactor[]
+> = {
+	"Combustión estacionaria": [
+		{
+			name: "Carbón",
+			measurement: "kg",
+			emission_factor: 2698.5459,
+			unit_factor: "kgCO2eq",
+			origin_factor:
+				"IPCC 2006 Guidelines for National Greenhouse Gas Inventories en base al Balance Nacional de Energía",
+		},
+		{
+			name: "Gas ciudad (cañeria o corriente)",
+			measurement: "kg",
+			emission_factor: 1.73,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Huella chile",
+		},
+		{
+			name: "Gas de alto horno",
+			measurement: "kg",
+			emission_factor: 0.79,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Huella chile",
+		},
+		{
+			name: "Gas de refinería",
+			measurement: "m3",
+			emission_factor: 0.9254,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Huella chile",
+		},
+		{
+			name: "Gas licuado de petróleo",
+			measurement: "m3",
+			emission_factor: 1583.7152,
+			unit_factor: "kgCO2eq",
+			origin_factor:
+				"IPCC 2006 Guidelines for National Greenhouse Gas Inventories en base al Balance Nacional de Energía",
+		},
+		{
+			name: "Gas natural",
+			measurement: "m3",
+			emission_factor: 1.9765,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Huella chile",
+		},
+		{
+			name: "Gasolina",
+			measurement: "m3",
+			emission_factor: 2261.5184,
+			unit_factor: "kgCO2eq",
+			origin_factor:
+				"IPCC 2006 Guidelines for National Greenhouse Gas Inventories en base al Balance Nacional de Energía",
+		},
+		{
+			name: "Kerosene",
+			measurement: "m3",
+			emission_factor: 2579.9307,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Huella chile",
+		},
+		{
+			name: "Nafta",
+			measurement: "m3",
+			emission_factor: 2354.7404,
+			unit_factor: "kgCO2eq",
+			origin_factor:
+				"IPCC 2006 Guidelines for National Greenhouse Gas Inventories en base al Balance Nacional de Energía",
+		},
+		{
+			name: "Petcoke",
+			measurement: "kg",
+			emission_factor: 2.85,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Huella chile",
+		},
+		{
+			name: "Petróleo 2 (Diesel)",
+			measurement: "m3",
+			emission_factor: 2707.3954,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Huella chile",
+		},
+		{
+			name: "Petróleo 5",
+			measurement: "m3",
+			emission_factor: 3005.9182,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Huella chile",
+		},
+		{
+			name: "Petróleo 6",
+			measurement: "m3",
+			emission_factor: 3064.9182,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Huella chile",
+		},
+		{
+			name: "FE propio(Biogas quemado en antorcha)",
+			measurement: "kg",
+			emission_factor: 0.00069343,
+			unit_factor: "kgCO2eq",
+			origin_factor:
+				"DEFRA 2020 - UK government GHG Conversion Factors for Company Reporting, Bioenergy Scope 1 31-07-2020",
+		},
+	],
+	"Combustión móvil": [
+		{
+			name: "Gas licuado de petróleo",
+			measurement: "m3",
+			emission_factor: 1583.7152,
+			unit_factor: "kgCO2eq",
+			origin_factor:
+				"IPCC 2006 Guidelines for National Greenhouse Gas Inventories en base al Balance Nacional de EnergÃ­a",
+		},
+		{
+			name: "Gas natural",
+			measurement: "m3",
+			emission_factor: 1.9765,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Huella chile",
+		},
+		{
+			name: "Gasolina",
+			measurement: "m3",
+			emission_factor: 2261.5184,
+			unit_factor: "kgCO2eq",
+			origin_factor:
+				"IPCC 2006 Guidelines for National Greenhouse Gas Inventories en base al Balance Nacional de EnergÃ­a",
+		},
+		{
+			name: "Kerosene",
+			measurement: "m3",
+			emission_factor: 2579.9307,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Huella chile",
+		},
+		{
+			name: "Petróleo 2 (Diesel)",
+			measurement: "m3",
+			emission_factor: 2707.3954,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Huella chile",
+		},
+	],
+	"Procesos industriales": [
+		{
+			name: "Relleno sanitario",
+			measurement: "ton",
+			emission_factor: 447.7,
+			unit_factor: "kgCO2eq",
+			origin_factor:
+				"Waste disposal - Greenhouse gas reporting: conversion factors 2020 https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2020",
+		},
+		{
+			name: "Compostaje",
+			measurement: "ton",
+			emission_factor: 10.2,
+			unit_factor: "kgCO2eq",
+			origin_factor:
+				"Waste disposal - Greenhouse gas reporting: conversion factors 2020 https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2020",
+		},
+		{
+			name: "Monorelleno",
+			measurement: "ton",
+			emission_factor: 447.7,
+			unit_factor: "kgCO2eq",
+			origin_factor:
+				"Waste disposal - Greenhouse gas reporting: conversion factors 2020 https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2020",
+		},
+	],
+	"Emisiones fugitivas": [
+		{
+			name: "SF6 Hexafluoruro de azufre",
+			measurement: "kg",
+			emission_factor: 23500,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Fuente: Datos proporcionados por el usuario",
+		},
+		{
+			name: "HFC-125",
+			measurement: "kg",
+			emission_factor: 3170,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Fuente: Datos proporcionados por el usuario",
+		},
+		{
+			name: "HFC-134",
+			measurement: "kg",
+			emission_factor: 1120,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Fuente: Datos proporcionados por el usuario",
+		},
+		{
+			name: "HFC-134a",
+			measurement: "kg",
+			emission_factor: 1300,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Fuente: Datos proporcionados por el usuario",
+		},
+		{
+			name: "HFC-143",
+			measurement: "kg",
+			emission_factor: 328,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Fuente: Datos proporcionados por el usuario",
+		},
+		{
+			name: "HFC-143a",
+			measurement: "kg",
+			emission_factor: 4800,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Fuente: Datos proporcionados por el usuario",
+		},
+		{
+			name: "HFC-152a",
+			measurement: "kg",
+			emission_factor: 138,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Fuente: Datos proporcionados por el usuario",
+		},
+		{
+			name: "HFC-227ea",
+			measurement: "kg",
+			emission_factor: 3350,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Fuente: Datos proporcionados por el usuario",
+		},
+		{
+			name: "HFC-23",
+			measurement: "kg",
+			emission_factor: 12400,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Fuente: Datos proporcionados por el usuario",
+		},
+		{
+			name: "HFC-236fa",
+			measurement: "kg",
+			emission_factor: 8060,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Fuente: Datos proporcionados por el usuario",
+		},
+		{
+			name: "HFC-245fa",
+			measurement: "kg",
+			emission_factor: 858,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Fuente: Datos proporcionados por el usuario",
+		},
+		{
+			name: "HFC-32",
+			measurement: "kg",
+			emission_factor: 677,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Fuente: Datos proporcionados por el usuario",
+		},
+		{
+			name: "HFC-41",
+			measurement: "kg",
+			emission_factor: 116,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Fuente: Datos proporcionados por el usuario",
+		},
+		{
+			name: "HFC-43-l0mee",
+			measurement: "kg",
+			emission_factor: 1650,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Fuente: Datos proporcionados por el usuario",
+		},
+		{
+			name: "CH4 Metano",
+			measurement: "kg",
+			emission_factor: 28,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Fuente: Datos proporcionados por el usuario",
+		},
+		{
+			name: "PFC-3-1-10 Perfluorobutano",
+			measurement: "kg",
+			emission_factor: 9200,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Fuente: Datos proporcionados por el usuario",
+		},
+		{
+			name: "PFC-318 Perfluorociclobutano",
+			measurement: "kg",
+			emission_factor: 9540,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Fuente: Datos proporcionados por el usuario",
+		},
+		{
+			name: "PFC-116 Perfluoroetano",
+			measurement: "kg",
+			emission_factor: 11100,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Fuente: Datos proporcionados por el usuario",
+		},
+		{
+			name: "PFC-5-1-14 Perfluorohexano",
+			measurement: "kg",
+			emission_factor: 7910,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Fuente: Datos proporcionados por el usuario",
+		},
+		{
+			name: "PFC-14 Perfluorometano",
+			measurement: "kg",
+			emission_factor: 6630,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Fuente: Datos proporcionados por el usuario",
+		},
+		{
+			name: "PFC-4-1-12 Perfluoropentano",
+			measurement: "kg",
+			emission_factor: 8550,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Fuente: Datos proporcionados por el usuario",
+		},
+		{
+			name: "PFC-218 Perfluoropropano",
+			measurement: "kg",
+			emission_factor: 8900,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Fuente: Datos proporcionados por el usuario",
+		},
+		{
+			name: "R404A",
+			measurement: "kg",
+			emission_factor: 3942.8,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Fuente: Datos proporcionados por el usuario",
+		},
+		{
+			name: "R407A",
+			measurement: "kg",
+			emission_factor: 1923.4,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Fuente: Datos proporcionados por el usuario",
+		},
+		{
+			name: "R407B",
+			measurement: "kg",
+			emission_factor: 2546.7,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Fuente: Datos proporcionados por el usuario",
+		},
+		{
+			name: "R407C",
+			measurement: "kg",
+			emission_factor: 1624.21,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Fuente: Datos proporcionados por el usuario",
+		},
+		{
+			name: "R410A",
+			measurement: "kg",
+			emission_factor: 1923.5,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Fuente: Datos proporcionados por el usuario",
+		},
+		{
+			name: "R410B",
+			measurement: "kg",
+			emission_factor: 2048.15,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Fuente: Datos proporcionados por el usuario",
+		},
+		{
+			name: "R507",
+			measurement: "kg",
+			emission_factor: 3985,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Fuente: Datos proporcionados por el usuario",
+		},
+		{
+			name: "R508A",
+			measurement: "kg",
+			emission_factor: 11607,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Fuente: Datos proporcionados por el usuario",
+		},
+		{
+			name: "R508B",
+			measurement: "kg",
+			emission_factor: 11698,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Fuente: Datos proporcionados por el usuario",
+		},
+		{
+			name: "Trifluoruro de nitrógeno (NF3)",
+			measurement: "kg",
+			emission_factor: 16100,
+			unit_factor: "kgCO2eq",
+			origin_factor: "Fuente: Datos proporcionados por el usuario",
+		},
+	],
+	Remociones: [],
 };
 
 export const typeByEmissionSourceIndirect: Record<
@@ -269,20 +683,3 @@ export const detailsByEmissionSourceOther: Record<
 		"Planta de tratamiento de riles",
 	],
 };
-
-export type EmissionSourceDetail =
-	| {
-			type_emission: "DIRECTA";
-			source_emission: SourceEmissionDirect;
-			detail_emission: (typeof detailsByEmissionSource)[SourceEmissionDirect][number];
-	  }
-	| {
-			type_emission: "INDIRECTA";
-			source_emission: SourceEmissionIndirect;
-			detail_emission: (typeof detailsByEmissionSourceIndirect)[SourceEmissionIndirect][number];
-	  }
-	| {
-			type_emission: "OTRAS";
-			source_emission: SourceEmissionOther;
-			detail_emission: (typeof detailsByEmissionSourceOther)[SourceEmissionOther][number];
-	  };
