@@ -78,7 +78,17 @@ const generateUserPermission = (): string[] => {
 };
 
 const generateUserPermissionByTheme = (theme: IndicatorsType): string[] => {
-	return [`${Resources[`${theme}_INDICATORS`]}${Divider}${Actions.MANAGE}`];
+	return [
+		`${Resources[`${theme}_INDICATORS`]}${Divider}${Actions.READ}`,
+		`${Resources[`${theme}_INDICATORS`]}${Divider}${Actions.UPDATE}`,
+		`${Resources[`${theme}_INDICATORS`]}${Divider}${Actions.CREATE}`,
+		`${Resources[`${theme}_INDICATORS`]}${Divider}${Actions.DELETE}`,
+		`${Resources.INPUT_DATS}${Divider}${Actions.READ}`,
+		`${Resources.INPUT_DATS}${Divider}${Actions.CREATE}`,
+		`${Resources.INPUT_DATS}${Divider}${Actions.UPDATE}`,
+		`${Resources.INPUT_DATS}${Divider}${Actions.DELETE}`,
+		`${Resources.BRANCHES}${Divider}${Actions.READ}`,
+	];
 };
 
 //Admin can handle the actions above his enterprise
