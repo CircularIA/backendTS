@@ -4,6 +4,7 @@ import { ServiceError } from "@src/errors/ServiceError";
 import Branch from "@src/models/Branches";
 import CompanyModel from "@src/models/Company";
 import { Types } from "mongoose";
+import { USER_ROLES } from "@src/middlewares/roles";
 
 export const getBranch = async (userId: string) => {
 	try {
@@ -11,10 +12,10 @@ export const getBranch = async (userId: string) => {
 		if (!findUser) {
 			throw new Error("Usuario no encontrado");
 		} else {
-			if (findUser.role === "super_admin") {
+			if (findUser.role === USER_ROLES.SUPER_ADMIN) {
 				const branches = await Branch.find();
 				return branches;
-			} else if (findUser.role === "admin") {
+			} else if (findUser.role === USER_ROLES.ADMIN) {
 				const companyUser = findUser.company;
 				//*Have to definy the company model
 				const dataCompany = await CompanyModel.findById(
