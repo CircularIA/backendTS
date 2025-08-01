@@ -11,6 +11,18 @@ import {
 	createRegularUserSchema,
 } from "@src/schemas/user/userSchema";
 
+import { getUsersByBranch } from "@src/services/userServices";
+
+export const getUsersByBranchController = async (req: Request, res: Response) => {
+    try {
+        const { branchId } = req.params;
+        const users = await getUsersByBranch(branchId);
+        res.json(users);
+    } catch (error) {
+        res.status(500).json({ error: "Failed to fetch users by branch" });
+    }
+};
+
 export const createSuperAdmin = async (req: Request, res: Response) => {
 	try {
 		const { username, email, password, secretKey } = req.body;
@@ -101,13 +113,14 @@ export const createAmbientalUser = async (req: Request, res: Response) => {
 
 export const createEconomicUser = async (req: Request, res: Response) => {
 	try {
-		const { username, email, password, company } = req.body;
+		const { username, email, password, company, branch } = req.body;
 		const user = await createThemeUser(
 			{
 				username,
 				email,
 				password,
 				company,
+				branch,
 			},
 			"ECONOMIC"
 		);
@@ -121,13 +134,14 @@ export const createEconomicUser = async (req: Request, res: Response) => {
 
 export const createSocialUser = async (req: Request, res: Response) => {
 	try {
-		const { username, email, password, company } = req.body;
+		const { username, email, password, company, branch } = req.body;
 		const user = await createThemeUser(
 			{
 				username,
 				email,
 				password,
 				company,
+				branch,
 			},
 			"SOCIAL"
 		);

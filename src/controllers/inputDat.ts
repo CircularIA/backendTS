@@ -35,21 +35,21 @@ declare global {
 }
 
 export const getInputDats = async (req: Request, res: Response) => {
-	try {
-		const { branch, year, month, day } = req.params;
-		const inputDats = await getInputDatsService(
-			branch,
-			Number(year),
-			Number(month),
-			Number(day)
-		);
+    try {
+        const { branch, year, month, day } = req.params;
+        const inputDats = await getInputDatsService(
+            branch,
+            year ? Number(year) : undefined,
+            month ? Number(month) : undefined,
+            day ? Number(day) : undefined
+        );
 
-		return res.status(200).json(inputDats);
-	} catch (error) {
-		return res.status(500).json({
-			message: "Internal Server Error",
-		});
-	}
+        return res.status(200).json(inputDats);
+    } catch (error) {
+        return res.status(500).json({
+            message: "Internal Server Error",
+        });
+    }
 };
 
 export const getInputDatsByIndicator = async (req: Request, res: Response) => {
@@ -96,28 +96,52 @@ export const registerInputDat = async (req: Request, res: Response) => {
 };
 
 const registerInputDatManySchema = z.object({
-	inputDats: z.array(inputDatSchema),
+    inputDats: z.array(inputDatSchema.omit({ 
+        company: true, 
+        branch: true, 
+        user: true 
+    })),
 });
 
 export const registerInputDatsMany = async (req: Request, res: Response) => {
-	try {
-		const { company, branch } = req.params;
-		const { user } = req.user;
-		const parsed = registerInputDatManySchema.safeParse(req.body);
-		if (!parsed.success) {
-			return res.status(400).json({ message: parsed.error.message });
-		}
-		const { inputDats } = parsed.data;
-		const savedInputDats = await registerInputDatsManyService(
-			company,
-			branch,
-			inputDats,
-			user.id
-		);
-		return res.status(200).json(savedInputDats);
-	} catch (error) {
-		return res.status(500).json({ message: "Internal Server Error" });
-	}
+    try {
+        const { company, branch } = req.params;
+        const user = req.user;
+        const parsed = registerInputDatManySchema.safeParse(req.body);
+        if (!parsed.success) {
+            return res.status(400).json({ message: parsed.error.message });
+        }
+        const { inputDats } = parsed.data;
+
+        if (!user) {
+            return res.status(401).json({ message: "Usuario no autenticado" });
+        }
+        
+        // Agregar los campos company, branch y user a cada inputDat
+        const inputDatsWithMetadata = inputDats.map(inputDat => ({
+            ...inputDat,
+            company,
+            branch,
+            user: {
+                username: user.username || user._id || 'Unknown',
+                email: user.email || 'Unknown',
+                role: user.role || 'Unknown'
+            }
+        }));
+        
+        const savedInputDats = await registerInputDatsManyService(
+            company,
+            branch,
+            inputDatsWithMetadata,
+            user._id
+        );
+        return res.status(200).json(savedInputDats);
+    } catch (error) {
+        return res.status(500).json({
+            message: "Internal Server Error",
+            error: (error instanceof Error ? error.message : String(error)),
+        });
+    }
 };
 
 interface updateInputDatBody {

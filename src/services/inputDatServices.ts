@@ -7,7 +7,7 @@ import { InputDatDTO } from "@src/schemas/inputDats/inputDatSchema";
 import { startSession, Types } from "mongoose";
 
 export const getInputDatsService = async (
-	branchId: string,
+	branch: string,
 	year?: number,
 	month?: number,
 	day?: number
@@ -31,7 +31,8 @@ export const getInputDatsService = async (
 				endDate = new Date(year, 11, 31, 23, 59, 59, 999);
 			}
 		}
-		let query = { branchId, date: { $gte: startDate, $lte: endDate } };
+		let query = { branch, date: { $gte: startDate, $lte: endDate } };
+		console.log("Query for input dats:", query);
 		const inputDats = await InputDatsModel.find(query).populate(
 			"listInputDat"
 		);
@@ -39,6 +40,7 @@ export const getInputDatsService = async (
 		if (!inputDats) {
 			throw new Error("No se encontraron datos de entrada");
 		}
+		console.log("Datos de entrada obtenidos:", inputDats, "Branch ID:", branch);
 		return inputDats;
 	} catch (error) {
 		console.error(error);
@@ -219,6 +221,7 @@ export const registerInputDatsManyService = async (
 	userId: string
 ) => {
 	const session = await startSession();
+	
 	try {
 		const currentCompany = await CompanyModel.findById(companyId);
 		const currentBranch = await BranchModel.findById(branchId);
@@ -229,7 +232,10 @@ export const registerInputDatsManyService = async (
 				"No se encontró la empresa, la sucursal o el usuario"
 			);
 		}
-		//Start transaction
+
+		const results: IInputDats[] = [];
+
+		// withTransaction maneja commit/abort
 		await session.withTransaction(async () => {
 			for (let inputDat of inputDats) {
 				inputDat.user = {
@@ -238,35 +244,38 @@ export const registerInputDatsManyService = async (
 					role: currentUser.role,
 				};
 
+				// Verificar si es actualización (tiene _id)
 				if (inputDat._id) {
 					const currentInputDat = await InputDatsModel.findById(
 						inputDat._id
 					).session(session);
+					
 					if (!currentInputDat) {
 						throw new Error("No se encontró el dato de entrada");
 					}
+					
 					if (currentInputDat.value !== inputDat.value) {
 						currentInputDat.value = inputDat.value;
+						currentInputDat.date = inputDat.date;
+						// Solo actualizar los campos permitidos del user
+						currentInputDat.user.username = currentUser.username;
+						currentInputDat.user.email = currentUser.email;
+						
 						const savedInputDat = await currentInputDat.save({
 							session,
 						});
-						if (!savedInputDat) {
-							throw new Error(
-								"Error al actualizar el dato de entrada"
-							);
-						}
+						results.push(savedInputDat);
+					} else {
+						results.push(currentInputDat);
 					}
 				} else {
+					// Crear nuevo registro
 					inputDat.company = companyId;
 					inputDat.branch = branchId;
 					inputDat._id = new Types.ObjectId().toString();
 
-					const newInputDat = new InputDatsModel({
-						...inputDat,
-					});
-					//Have to verify if the date is already registered
+					//Verificar si ya existe para este mes
 					const auxDate = new Date(inputDat.date);
-
 					const existingInputDat = await InputDatsModel.findOne({
 						listInputDat: inputDat.listInputDat,
 						company: companyId,
@@ -283,43 +292,62 @@ export const registerInputDatsManyService = async (
 								1
 							),
 						},
-					});
+					}).session(session);
+
 					if (existingInputDat) {
-						throw new Error("El dato de entrada ya existe");
+						// Si existe, actualizar el valor
+						if (existingInputDat.value !== inputDat.value) {
+							existingInputDat.value = inputDat.value;
+							existingInputDat.date = inputDat.date;
+							existingInputDat.user.username = currentUser.username;
+							existingInputDat.user.email = currentUser.email;
+							
+							const updatedInputDat = await existingInputDat.save({
+								session,
+							});
+							results.push(updatedInputDat);
+						} else {
+							results.push(existingInputDat);
+						}
 					} else {
+						// Si no existe, crear nuevo
+						const newInputDat = new InputDatsModel({
+							...inputDat,
+						});
+
 						const savedInputDat = await newInputDat.save({
 							session,
 						});
 
 						if (savedInputDat) {
-							const existingListInputDat =
-								await BranchModel.findOne({
-									_id: branchId,
-									inputDats: inputDat.listInputDat,
-								}).session(session);
+							// Verificar si el listInputDat ya está en la branch
+							const existingListInputDat = await BranchModel.findOne({
+								_id: branchId,
+								inputDats: inputDat.listInputDat,
+							}).session(session);
+
 							if (!existingListInputDat) {
 								currentBranch.inputDats.push(
 									new Types.ObjectId(inputDat.listInputDat)
 								);
-								const response = await currentBranch.save({
-									session,
-								});
-								if (!response) {
-									throw new Error(
-										"Error al guardar el dato de entrada"
-									);
-								}
+								await currentBranch.save({ session });
 							}
+							
+							results.push(savedInputDat);
 						}
 					}
 				}
 			}
 		});
-		await session.commitTransaction();
+
+		return results;
+
 	} catch (error) {
-		await session.abortTransaction();
-		console.error(error);
+		console.error("Error in registerInputDatsManyService:", error);
 		throw new Error("Error al crear el dato de entrada");
+	} finally {
+		// Siempre cerrar la sesión
+		await session.endSession();
 	}
 };
 
