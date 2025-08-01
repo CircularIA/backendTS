@@ -29,7 +29,7 @@ const ListInputDatsSchema = new Schema<IListInputDats>({
 });
 
 const ListInputDatsModel = model<IListInputDats>(
-	"ListInputDats",
+	"ListInputDat",
 	ListInputDatsSchema
 );
 

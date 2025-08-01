@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 // Models
 import BranchModel from '../models/Branches';
 import ListInputDatsModel from '../models/ListInputDats';
+import UserSelection from '../models/UserSelection';
 import IndicatorModel from '../models/Indicators';
 import InputDatsModel from '../models/InputDats';
 
@@ -213,7 +214,7 @@ export const getEcoequivalences = async (req: Request, res: Response): Promise<v
 
 export const generateExcelTemplate = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { branchId } = req.params;
+        const { branchId, userId } = req.params;
         // Obtener el año del query parameter, o usar el año actual si no se proporciona
         const year = req.query.year ? parseInt(req.query.year as string) : new Date().getFullYear();
         
@@ -224,14 +225,41 @@ export const generateExcelTemplate = async (req: Request, res: Response): Promis
             return;
         }
         
-        // Obtener los datos de entrada disponibles para la sucursal
+        // Obtener las selecciones del usuario
+        const userSelections = await UserSelection.findOne({ userId });
+        if (!userSelections || !userSelections.selections) {
+            res.status(404).json({ message: 'No se encontraron selecciones para este usuario' });
+            return;
+        }
+        
+        // Extraer los IDs de los indicadores seleccionados
+        const selectedIndicatorIds: string[] = [];
+        userSelections.selections.forEach((categoryMap: any, category: string) => {
+            if (categoryMap instanceof Map) {
+                categoryMap.forEach((indicatorData: any, indicatorId: string) => {
+                    selectedIndicatorIds.push(indicatorId);
+                });
+            }
+        });
+        
+        if (selectedIndicatorIds.length === 0) {
+            res.status(404).json({ message: 'No se encontraron indicadores seleccionados' });
+            return;
+        }
+        
+        // Obtener los datos de entrada disponibles para la sucursal que coincidan con las selecciones del usuario
         const branchInputDats = branch.inputDats;
+        // Encontrar la intersección entre los indicadores de la sucursal y los seleccionados por el usuario
+        const filteredIds = branchInputDats.filter((id: mongoose.Types.ObjectId) => 
+            selectedIndicatorIds.includes(id.toString())
+        );
+        
         const listInputDats = await ListInputDatsModel.find({
-            _id: { $in: branchInputDats }
+            _id: { $in: filteredIds }
         });
         
         if (!listInputDats.length) {
-            res.status(404).json({ message: 'No se encontraron datos de entrada para esta sucursal' });
+            res.status(404).json({ message: 'No se encontraron datos de entrada para las selecciones de este usuario' });
             return;
         }
         
@@ -279,7 +307,7 @@ export const generateExcelTemplate = async (req: Request, res: Response): Promis
         // Añadir título y logo (simulado con texto)
         worksheet.mergeCells('A1:N1');
         const titleCell = worksheet.getCell('A1');
-        titleCell.value = `CircularIA - Plantilla de Datos de Entrada - ${branch.name || 'Sucursal'}`;
+        titleCell.value = `CircularIA - Plantilla Personalizada de Datos de Entrada - ${branch.name || 'Sucursal'}`;
         titleCell.font = {
             name: 'Arial',
             size: 16,
