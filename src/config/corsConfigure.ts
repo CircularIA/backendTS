@@ -1,5 +1,5 @@
 export const corsConfigure = {
-	origin: process.env.CORS_ORIGIN,
+	origin: process.env.CORS_ORIGIN?.split(","),
 	methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
 	preflightContinue: false,
 	optionsSuccessStatus: 204,
