@@ -1,5 +1,4 @@
 import { IEmissionSource } from "@src/models/EmissionSource";
-import { Measurements } from "./common.types";
 
 export type TypeEmission = "DIRECTA" | "INDIRECTA" | "OTRAS";
 
