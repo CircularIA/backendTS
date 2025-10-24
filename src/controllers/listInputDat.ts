@@ -138,7 +138,7 @@ export const getEcoequivalences = async (req: Request, res: Response): Promise<v
         const endDate = new Date(targetYear, 11, 31, 23, 59, 59, 999); // 31 de diciembre del año
         
         const filter: { subcategory: string } = {
-            subcategory: (subcategory as string) || 'Salida y valorización de Residuos, Productos y subproductos'
+            subcategory: (subcategory as string) || 'Salida de materiales'
         };
         
         const listInputDats = await ListInputDatsModel.find(filter);

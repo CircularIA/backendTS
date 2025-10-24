@@ -36,18 +36,18 @@ export interface Ecoquivalence {
 }
 
 export type SubCategorie =
-	| "Salida y valorización de Residuos, Productos y subproductos"
+	| "Salida de materiales"
 	| "Agua"
 	| "Energía"
 	| "Huella de carbono de salida"
 	| "Entrada de suministros"
 	| "Productividad circular de material"
-	| "Porcentaje de ingreso por acciones circulares"
-	| "Porcentaje inversión en circularidad"
+	| "Ingreso por acciones circulares"
+	| "Inversión en circularidad"
 	| "Empleo verde"
 	| "Porcentaje de empleos circulares"
 	| "Educación ambiental interna"
-	| "Porcentaje de participación femenina"
+	| "Paridad organizacional"
 	| "Social explícito"
 	| "Número de accidentes en un periodo"
 	| "Número de sinergia industrial";

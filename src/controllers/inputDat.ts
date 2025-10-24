@@ -706,7 +706,7 @@ export const importInputDats = async (
 						description: `Imported indicator: ${indicatorName}`,
 						measurement: "units",
 						category: "Ambiental",
-						subcategory: "Salida y valorización de Residuos, Productos y subproductos",
+						subcategory: "Salida de materiales",
 					});
 					await listInputDat.save();
 				}
