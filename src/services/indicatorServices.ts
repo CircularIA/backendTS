@@ -69,18 +69,13 @@ export const getIndicatorValueService = async (
 		const monthValues = [];
 
 		if (!month) {
-			for (let i = 1; i <= 12; i++) {
-				const startDate = new Date(year, i - 1, 1, 0, 0, 0, 0);
-				const endDate = new Date(year, i, 0, 23, 59, 59, 999);
-				const monthValue: {
-					year: number;
-					month: string;
-					index: number;
-					value: GetValueResult;
-				} = {
-					year: year,
+			for (let i = 0; i < 12; i++) {
+				const startDate = new Date(year, i, 1, 0, 0, 0, 0);
+				const endDate = new Date(year, i + 1, 0, 23, 59, 59, 999);
+				const monthValue = {
+					year,
 					month: getMonthName(i),
-					index: i,
+					index: i + 1,
 					value: {
 						result: -1,
 						details: {},

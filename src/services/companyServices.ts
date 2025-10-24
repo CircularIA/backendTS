@@ -12,21 +12,72 @@ export const getCompany = async (userId: string) => {
 			throw new Error("User not found");
 		} else {
 			if (findUser.role === USER_ROLES.SUPER_ADMIN) {
-				const companies = await Company.find().populate("branches");
-				return companies;
+				const companies = await Company.find()
+					.populate({
+						path: "branches",
+						populate: {
+							path: "manager",
+							select: "username email", // Solo selecciona los campos que necesitas
+						},
+					});
+
+				// Transformar para agregar managerName
+				const companiesWithManagerName = companies.map((company) => {
+					const companyObj = company.toObject();
+					companyObj.branches = companyObj.branches.map((branch: any) => ({
+						...branch,
+						managerName: branch.manager?.username || "Unknown",
+					}));
+					return companyObj;
+				});
+
+				return companiesWithManagerName;
 			} else if (findUser.role === USER_ROLES.ADMIN) {
 				const findCompany = await Company.findById(
 					findUser.company?._id
-				).populate("branches");
+				).populate({
+					path: "branches",
+					populate: {
+						path: "manager",
+						select: "username email",
+					},
+				});
+
 				if (!findCompany) {
 					throw new Error("Company not found");
 				}
-				return findCompany;
+
+				// Transformar para agregar managerName
+				const companyObj = findCompany.toObject();
+				companyObj.branches = companyObj.branches.map((branch: any) => ({
+					...branch,
+					managerName: branch.manager?.username || "Unknown",
+				}));
+
+				return companyObj;
 			} else if (findUser.role === USER_ROLES.USER) {
 				const findCompany = await Company.findById(
 					findUser.company?._id
-				).populate("branches");
-				return findCompany;
+				).populate({
+					path: "branches",
+					populate: {
+						path: "manager",
+						select: "username email",
+					},
+				});
+
+				if (!findCompany) {
+					throw new Error("Company not found");
+				}
+
+				// Transformar para agregar managerName
+				const companyObj = findCompany.toObject();
+				companyObj.branches = companyObj.branches.map((branch: any) => ({
+					...branch,
+					managerName: branch.manager?.username || "Unknown",
+				}));
+
+				return companyObj;
 			} else {
 				throw new Error("User role not valid");
 			}
