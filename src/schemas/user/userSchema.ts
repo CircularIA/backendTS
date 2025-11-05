@@ -57,9 +57,11 @@ export const createAdminSchema = z.object({
 		.min(6, { message: "Password must be at least 6 characters long" }),
 	company: z.string().regex(objectIdRegex, { message: "Invalid ObjectId" }),
 	//Type of the user
-	role: z.nativeEnum(USER_ROLES).default(USER_ROLES.ADMIN),
-	permissions: z.array(z.string()),
+	// role: z.nativeEnum(USER_ROLES).default(USER_ROLES.ADMIN),
+	// permissions: z.array(z.string()),
 });
+
+export type CreateAdminSchema = z.infer<typeof createAdminSchema>;
 
 export const createRegularUserSchema = z.object({
 	username: z.string(),
