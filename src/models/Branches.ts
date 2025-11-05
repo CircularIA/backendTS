@@ -9,7 +9,7 @@ interface IBranch extends Document {
 	email: string;
 	status: boolean;
 	company: Types.ObjectId;
-	manager: Types.ObjectId;
+	manager?: Types.ObjectId;
 	inputDats: Types.ObjectId[];
 	assignedUsers: Types.ObjectId[];
 }
@@ -32,7 +32,7 @@ const branchSchema = new Schema<IBranch>(
 		manager: {
 			type: Schema.Types.ObjectId,
 			ref: "User",
-			required: [true, "Manager is required"],
+			required: [false],
 		},
 		//Indicadores de la sucursal
 		inputDats: [
