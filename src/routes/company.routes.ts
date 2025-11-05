@@ -1,4 +1,4 @@
-import { getCompanies } from "@src/controllers/company";
+import { createCompany, getCompanies } from "@src/controllers/company";
 import { verifyToken } from "@src/middlewares/auth";
 import { checkPermissionByRole } from "@src/middlewares/checkPermission";
 import { authorizeRoles, USER_ROLES } from "@src/middlewares/roles";
@@ -17,6 +17,13 @@ companyRouter.get(
 		resourceOverride: Resources.BRANCHES,
 	}),
 	getCompanies
+);
+
+companyRouter.post(
+	"/",
+	verifyToken,
+	authorizeRoles(USER_ROLES.SUPER_ADMIN),
+	createCompany
 );
 
 export default companyRouter;
