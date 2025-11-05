@@ -13,14 +13,17 @@ import {
 
 import { getUsersByBranch } from "@src/services/userServices";
 
-export const getUsersByBranchController = async (req: Request, res: Response) => {
-    try {
-        const { branchId } = req.params;
-        const users = await getUsersByBranch(branchId);
-        res.json(users);
-    } catch (error) {
-        res.status(500).json({ error: "Failed to fetch users by branch" });
-    }
+export const getUsersByBranchController = async (
+	req: Request,
+	res: Response
+) => {
+	try {
+		const { branchId } = req.params;
+		const users = await getUsersByBranch(branchId);
+		res.json(users);
+	} catch (error) {
+		res.status(500).json({ error: "Failed to fetch users by branch" });
+	}
 };
 
 export const createSuperAdmin = async (req: Request, res: Response) => {
@@ -46,15 +49,18 @@ export const createSuperAdmin = async (req: Request, res: Response) => {
 
 export const createAdmin = async (req: Request, res: Response) => {
 	try {
-		const parsed = createAdminSchema
-			.omit({ role: true, permissions: true })
-			.safeParse(req.body);
+		const parsed = createAdminSchema.safeParse(req.body);
 		if (!parsed.success) {
 			return res.status(400).json({ message: "Invalid data" });
 		}
 		const { username, email, password, company } = parsed.data;
 
-		const user = await createAdminUser(username, email, password, company);
+		const user = await createAdminUser({
+			username,
+			email,
+			password,
+			company,
+		});
 
 		return res
 			.status(201)
