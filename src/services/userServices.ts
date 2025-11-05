@@ -5,6 +5,7 @@ import Branch from "@src/models/Branches";
 import CompanyModel from "@src/models/Company";
 import UserModel from "@src/models/Users";
 import {
+	CreateAdminSchema,
 	createRegularUserSchema,
 	createThemeUserSchema,
 	userEntitySchema,
@@ -86,14 +87,10 @@ export const createSuperAdminUser = async (userData: any) => {
 	}
 };
 
-export const createAdminUser = async (
-	username: string,
-	email: string,
-	password: string,
-	company: string
-) => {
+export const createAdminUser = async (data: CreateAdminSchema) => {
 	console.log("enter in the service");
 	try {
+		const { username, email, password, company } = data;
 		const hashedPassword = await bcrypt.hash(password, Number(CONFIG.SALT));
 
 		const newUser = new UserModel({
