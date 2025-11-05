@@ -14,7 +14,7 @@ interface ICompany extends Document {
 	size?: number;
 	typeIndustry?: TypeIndustry;
 	employees?: number;
-	admin: Types.ObjectId;
+	admin?: Types.ObjectId;
 	branches: Types.ObjectId[];
 }
 
@@ -31,7 +31,7 @@ const companySchema = new Schema<ICompany>({
 	size: { type: Number, required: false },
 	typeIndustry: { type: String, required: false },
 	employees: { type: Number, required: false },
-	admin: { type: Schema.Types.ObjectId, ref: "User", required: true },
+	admin: { type: Schema.Types.ObjectId, ref: "User", required: false },
 	branches: [{ type: Schema.Types.ObjectId, ref: "Branch" }],
 });
 
