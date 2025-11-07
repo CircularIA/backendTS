@@ -14,7 +14,6 @@ import { model, Types } from "mongoose";
 import ImportHistory from "@src/models/ImportHistory";
 import ListInputDatsModel from "@src/models/ListInputDats";
 import InputDatsModel from "@src/models/InputDats";
-import { handleSendEmail } from "@src/services/sendgridService";
 
 // Importar los modelos necesarios
 const Company = model("Company");
