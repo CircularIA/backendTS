@@ -6,6 +6,7 @@ const CONFIG = {
 	NODE_ENV: process.env.NODE_ENV || "development",
 	SECRET_KEY: process.env.SECRET_KEY || "secret",
 	SALT: process.env.SALT || 2,
+	SENDGRID_API_KEY: process.env.SENDGRID_API_KEY || "",
 };
 
 export { CONFIG };

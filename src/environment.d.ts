@@ -16,6 +16,7 @@ declare global {
 			CPANEL_APP_HOST: string;
 			SECRET_KEY: string;
 			SALT: number;
+			SENDGRID_API_KEY: string;
 		}
 	}
 	namespace Express {
